@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Mission</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Floating Hearts */
+    .heart {
+      position: fixed;
+      bottom: -20px;
+      font-size: 20px;
+      animation: floatUp 6s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 0.7; }
+      100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-black via-gray-900 to-black min-h-screen flex items-center justify-center px-4 overflow-hidden">
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti"></canvas>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="w-full max-w-md">
+    <div class="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-8 text-white transition-all duration-500">
+
+      <h1 class="text-2xl font-bold text-center mb-2">
+        🎂 Happy Birthday Mr.Mandasoodu
+      </h1>
+      <p class="text-center text-gray-300 text-sm mb-6">
+        Oru kutty Surprise 😎
+      </p>
+
+      <div id="questionSection">
+        <p id="question" class="text-center text-lg font-medium mb-6">
+          Namma ethu vanguna aprm nee series pakka start pana… 😂
+        </p>
+
+        <input 
+          id="answerInput"
+          type="text"
+          placeholder="Answer here da..."
+          class="w-full px-4 py-3 rounded-xl bg-white/20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-pink-400 transition"
+        />
+
+        <button 
+          onclick="checkAnswer()"
+          class="w-full mt-5 bg-pink-500 hover:bg-pink-600 active:scale-95 transition-all duration-300 py-3 rounded-xl font-semibold shadow-lg"
+        >
+          Submit 🚀
+        </button>
+
+        <p id="message" class="text-center mt-4 text-sm font-medium"></p>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  let step = 1;
+  const music = document.getElementById("bgMusic");
+
+  // Play music on first click (browser restriction fix)
+  document.body.addEventListener("click", () => {
+    music.play().catch(() => {});
+  }, { once: true });
+
+  function checkAnswer() {
+    const input = document.getElementById("answerInput").value.toLowerCase().trim();
+    const message = document.getElementById("message");
+    const question = document.getElementById("question");
+
+    if (step === 1) {
+      if (input === "bed") {
+        message.innerHTML = "Level 1 clear da 😎👏 Po bed pakkam paaru... First gift anga irukku 🎁";
+        message.className = "text-green-400 text-center mt-4 font-semibold";
+        step = 2;
+        question.innerHTML = "Next Clue 😌<br>Velila porathukku munnadi 10 thadava face check panra idam enga? 🪞😂";
+        document.getElementById("answerInput").value = "";
+      } else {
+        message.innerHTML = "Aiyo Sherlock… Age effect ah? 😏";
+        message.className = "text-red-400 text-center mt-4 font-semibold";
+      }
+    }
+
+    else if (step === 2) {
+      if (input === "mirror" || input === "dressing table") {
+
+        startConfetti();
+        createHearts();
+
+        document.getElementById("questionSection").innerHTML = `
+          <div class="text-center">
+            <h2 class="text-2xl font-bold mb-4 text-pink-400">🎉 Mission Complete 🎉</h2>
+            <p class="mb-4 text-lg">
+              Happy Birthday da Old Boy ❤️<br><br>
+              Ippo dressing table drawer open pannu…<br>
+              Un FINAL surprise anga wait panitu irukku 🎁🔥
+            </p>
+            <p class="text-sm text-gray-300">
+              Age aagalam… but enaku nee dhaan permanent piece 😘
+            </p>
+          </div>
+        `;
+      } else {
+        message.innerHTML = "Face paakara edam maranthutiya? Over aging da idhu 😏";
+        message.className = "text-red-400 text-center mt-4 font-semibold";
+      }
+    }
+  }
+
+  /* Confetti */
+  function startConfetti() {
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const confetti = Array.from({length: 150}).map(() => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 6 + 2,
+      d: Math.random() * 50
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "pink";
+      confetti.forEach(c => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      update();
+    }
+
+    function update() {
+      confetti.forEach(c => {
+        c.y += 2;
+        if (c.y > canvas.height) {
+          c.y = 0;
+          c.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    setInterval(draw, 20);
+  }
+
+  /* Floating Hearts */
+  function createHearts() {
+    setInterval(() => {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerHTML = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 20 + 20 + "px";
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 6000);
+    }, 500);
+  }
+</script>
+
+</body>
+</html>

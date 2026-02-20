@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  .heart-beat {
+    animation: beat 1s infinite;
+  }
+
+  @keyframes beat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    40% { transform: scale(1); }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  .fade-out {
+    animation: fadeOut 1s forwards;
+  }
+
+  @keyframes fadeOut {
+    to { opacity: 0; transform: scale(1.2); }
+  }
+</style>
+</head>
+
+<body class="bg-black flex items-center justify-center min-h-screen overflow-hidden">
+
+<div id="intro" class="text-center text-white px-6">
+
+  <div class="text-6xl heart-beat mb-6">❤️</div>
+
+  <h1 id="typingText" class="text-xl font-semibold"></h1>
+
+</div>
+
+<script>
+  const text = "Booting Love System...";
+  const typing = document.getElementById("typingText");
+  const intro = document.getElementById("intro");
+  let i = 0;
+
+  function typeEffect() {
+    if (i < text.length) {
+      typing.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typeEffect, 80);
+    } else {
+      setTimeout(secondLine, 1000);
+    }
+  }
+
+  function secondLine() {
+    typing.innerHTML = "Scanning Birthday Boy...";
+    setTimeout(thirdLine, 1500);
+  }
+
+  function thirdLine() {
+    typing.innerHTML = "Handsome Level: 100% 😎";
+    setTimeout(finalLine, 1500);
+  }
+
+  function finalLine() {
+    typing.innerHTML = "Accessing Surprise...";
+    setTimeout(() => {
+      intro.classList.add("fade-out");
+      setTimeout(() => {
+        window.location.href = "index.html"; // your treasure hunt page
+      }, 1000);
+    }, 1500);
+  }
+
+  typeEffect();
+</script>
+
+</body>
+</html>
