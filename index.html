@@ -79,7 +79,8 @@
 <script>
   const music = document.getElementById("bgMusic");
   const answer1="Level 1 clear  😎👏 Poi TV table la search pani paaru... First gift anga irukku 🎁";
-  const answer2="  Ippo berol la thedi paaru…  Un FINAL surprise anga wait panitu irukku 🎁🔥";
+  const answer2="  Ippo berol la thedi paaru…  unoda second gift anga wait panitu irukku 🎁🔥";
+  const answer3="Office bag la thedi paaru...  Un FINAL surprise anga wait panitu irukku 🎁🔥";
   document.body.addEventListener("click", () => {
     music.play().catch(() => {});
   }, { once: true });
@@ -92,6 +93,10 @@
     {
       question: "Velila porathukku munnadi enga irunthu 10 dress eduthu potu papa? 🪞😂",
       answers: ["mirror", "berol"]
+    },
+    {
+      question: "Office ku laptop ethula eduthutu pova 🪞😂",
+      answers: ["bag", "laptop bag"]
     }
   ];
 
@@ -115,7 +120,7 @@
       messageEl.innerHTML = 
         `
         <div class="text-green-400 font-semibold text-center">
-         Correct eruma 🎁` + (currentStep === 0 ? answer1 : answer2) + `
+         Correct eruma 🎁` + ((currentStep === 0) ? answer1 : currentStep===1? answer2:answer3) + `
         </div>
         <button 
           onclick="goNext()" 
@@ -155,6 +160,10 @@
         </p>
         <p class="text-sm text-gray-300">
           I hope you enjoyed this little surprise! Wishing you a fantastic year ahead filled with love, laughter, and all the things that make you happy. 🎂🎁🎈
+          I wish you reach even greater heights and achieve a bigger position in life.
+          I wish you a very happy birthday.
+          I will always be there for you — to make you smile, to irritate you, to fight with you, and to love you.
+          Once again, Happy Birthday, Eruma… Mr. Mandasoodu ❤️🎉
         </p>
       </div>
     `;
