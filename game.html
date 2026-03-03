@@ -28,7 +28,11 @@
 </head>
 
 <body class="bg-black flex items-center justify-center min-h-screen overflow-hidden">
-
+   <!-- Confetti Canvas -->
+  <canvas id="confetti"></canvas>
+  <audio id="bgMusic" loop>
+    <source src="./music/teddy-bear.mpeg" type="audio/mpeg">
+  </audio>
 <div id="intro" class="text-center text-white px-6">
 
   <div class="text-6xl heart-beat mb-6">❤️</div>
@@ -38,6 +42,8 @@
 </div>
 
 <script>
+  const music = document.getElementById("bgMusic");
+  music.play();
   const text = "Booting Love System...";
   const typing = document.getElementById("typingText");
   const intro = document.getElementById("intro");
@@ -69,7 +75,7 @@
       intro.classList.add("fade-out");
       setTimeout(() => {
         window.location.href = "index.html"; // your treasure hunt page
-      }, 1000);
+      }, 1500);
     }, 1500);
   }
 
