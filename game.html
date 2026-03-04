@@ -1,99 +1,221 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Mission</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-  .heart-beat {
-    animation: beat 1s infinite;
-  }
+  <style>
+    /* Floating Hearts */
+    .heart {
+      position: fixed;
+      bottom: -20px;
+      font-size: 20px;
+      animation: floatUp 6s linear infinite;
+      opacity: 0.7;
+    }
 
-  @keyframes beat {
-    0% { transform: scale(1); }
-    25% { transform: scale(1.1); }
-    40% { transform: scale(1); }
-    60% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-  }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 0.7; }
+      100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+    }
 
-  .fade-out {
-    animation: fadeOut 1s forwards;
-  }
-
-  @keyframes fadeOut {
-    to { opacity: 0; transform: scale(1.2); }
-  }
-</style>
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+  </style>
 </head>
 
-<body class="bg-black min-h-screen overflow-hidden flex items-center justify-center">
+<body class="bg-gradient-to-br from-black via-gray-900 to-black min-h-screen flex items-center justify-center px-4 overflow-hidden">
 
   <!-- Confetti Canvas -->
-  <canvas id="confetti" class="fixed top-0 left-0 w-full h-full"></canvas>
+  <canvas id="confetti"></canvas>
 
-  <!-- Music -->
+  <!-- Background Music -->
   <audio id="bgMusic" loop>
-    <source src="./music/teddy-bear.mpeg" type="audio/mpeg">
+    <source src="./music/bg-music.mpeg" type="audio/mpeg">
   </audio>
 
-  <!-- Intro Screen -->
-  <div id="intro" 
-       class="w-full h-screen flex flex-col items-center justify-center 
-              text-center text-white px-6">
+  <div class="w-full max-w-md">
+    <div class="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-8 text-white transition-all duration-500">
 
-    <!-- Heart -->
-    <div class="text-6xl sm:text-7xl md:text-8xl heart-beat mb-6 flex justify-center w-full">
-      ❤️
+      <h1 class="text-2xl font-bold text-center mb-2">
+        🎂 Happy Birthday Mr.Mandasoodu
+      </h1>
+      <p class="text-center text-gray-300 text-sm mb-6">
+        Oru kutty Surprise 😎
+      </p>
+
+      <div id="questionSection">
+        <p id="question" class="text-center text-lg font-medium mb-6">
+          Namma ethu vanguna aprm nee series pakka start pana… 😂
+        </p>
+
+        <input 
+          id="answerInput"
+          type="text"
+          placeholder="Answer here..."
+          class="w-full px-4 py-3 rounded-xl bg-white/20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-pink-400 transition"
+        />
+
+        <button 
+          onclick="checkAnswer()"
+          class="w-full mt-5 bg-pink-500 hover:bg-pink-600 active:scale-95 transition-all duration-300 py-3 rounded-xl font-semibold shadow-lg"
+        >
+          Submit 🚀
+        </button>
+
+        <p id="message" class="text-center mt-4 text-sm font-medium"></p>
+      </div>
+
     </div>
-
-    <!-- Typing Text -->
-    <h1 id="typingText" 
-        class="text-lg sm:text-xl md:text-2xl font-semibold max-w-md mx-auto">
-    </h1>
-
   </div>
+
 
 <script>
   const music = document.getElementById("bgMusic");
   music.play();
-  const text = "Booting Love System...";
-  const typing = document.getElementById("typingText");
-  const intro = document.getElementById("intro");
-  let i = 0;
+  const answer1="Level 1 clear  😎👏 Poi TV table la search pani paaru... First gift anga irukku 🎁";
+  const answer2="  Ippo berol la thedi paaru…  unoda second gift anga wait panitu irukku 🎁🔥";
+  const answer3="Office bag la thedi paaru...  Un FINAL surprise anga wait panitu irukku 🎁🔥";
+  document.body.addEventListener("click", () => {
+    music.play().catch(() => {});
+  }, { once: true });
 
-  function typeEffect() {
-    if (i < text.length) {
-      typing.innerHTML += text.charAt(i);
-      i++;
-      setTimeout(typeEffect, 80);
+  const questions = [
+    {
+      question: "Namma ethu vanguna aprm nee series pakka start pana… 😂",
+      answers: ["tv"]
+    },
+    {
+      question: "Velila porathukku munnadi enga irunthu 10 dress eduthu potu papa? 🪞😂",
+      answers: ["mirror", "berol"]
+    },
+    {
+      question: "Office ku laptop ethula eduthutu pova 🪞😂",
+      answers: ["bag", "laptop bag"]
+    }
+  ];
+
+  let currentStep = 0;
+
+  const questionEl = document.getElementById("question");
+  const messageEl = document.getElementById("message");
+  const inputEl = document.getElementById("answerInput");
+
+  function loadQuestion() {
+    questionEl.innerHTML = questions[currentStep].question;
+    inputEl.value = "";
+    messageEl.innerHTML = "";
+  }
+
+  function checkAnswer() {
+    const input = inputEl.value.toLowerCase().trim();
+
+    if (questions[currentStep].answers.includes(input)) {
+
+      messageEl.innerHTML = 
+        `
+        <div class="text-green-400 font-semibold text-center">
+         Correct eruma 🎁` + ((currentStep === 0) ? answer1 : currentStep===1? answer2:answer3) + `
+        </div>
+        <button 
+          onclick="goNext()" 
+          class="w-full mt-4 bg-green-500 hover:bg-green-600 transition py-2 rounded-xl font-semibold">
+          Next ➡️
+        </button>
+      `;
+
     } else {
-      setTimeout(secondLine, 1000);
+      messageEl.innerHTML = `
+        <div class="text-red-400 font-semibold text-center">
+          Wrong Answer... ithu kooda teriyatha 😏
+        </div>
+      `;
     }
   }
 
-  function secondLine() {
-    typing.innerHTML = "Scanning Birthday Boy...";
-    setTimeout(thirdLine, 1500);
+  function goNext() {
+    currentStep++;
+
+    if (currentStep < questions.length) {
+      loadQuestion();
+    } else {
+      missionComplete();
+    }
   }
 
-  function thirdLine() {
-    typing.innerHTML = "Handsome Level: 100% 😎";
-    setTimeout(finalLine, 1500);
+  function missionComplete() {
+    startConfetti();
+    createHearts();
+
+    document.getElementById("questionSection").innerHTML = `
+      <div class="text-center">
+        <h2 class="text-2xl font-bold mb-4 text-pink-400">🎉 Mission Complete 🎉</h2>
+        <p class="mb-4 text-lg">
+          Happy Birthday Mental 😝❤️<br><br>    
+        </p>
+        <p class="text-sm text-gray-300">
+          I hope you enjoyed this little surprise! Wishing you a fantastic year ahead filled with love, laughter, and all the things that make you happy. 🎂🎁🎈
+          I wish you reach even greater heights and achieve a bigger position in life.
+          I wish you a very happy birthday.
+          I will always be there for you — to make you smile, to irritate you, to fight with you, and to love you.
+          Once again, Happy Birthday, Eruma… Mr. Mandasoodu ❤️🎉
+        </p>
+      </div>
+    `;
   }
 
-  function finalLine() {
-    typing.innerHTML = "Accessing Surprise...";
-    setTimeout(() => {
-      intro.classList.add("fade-out");
-      setTimeout(() => {
-        window.location.href = "index.html"; // your treasure hunt page
-      }, 1500);
-    }, 1500);
+  /* Confetti */
+  function startConfetti() {
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const confetti = Array.from({length: 150}).map(() => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 6 + 2
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "pink";
+      confetti.forEach(c => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fill();
+        c.y += 2;
+        if (c.y > canvas.height) {
+          c.y = 0;
+          c.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    setInterval(draw, 20);
   }
 
-  typeEffect();
+  /* Floating Hearts */
+  function createHearts() {
+    setInterval(() => {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerHTML = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 20 + 20 + "px";
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 6000);
+    }, 500);
+  }
+
+  loadQuestion();
 </script>
-
 </body>
 </html>
