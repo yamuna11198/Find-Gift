@@ -27,19 +27,32 @@
 </style>
 </head>
 
-<body class="bg-black flex items-center justify-center min-h-screen overflow-hidden">
-   <!-- Confetti Canvas -->
-  <canvas id="confetti"></canvas>
+<body class="bg-black min-h-screen overflow-hidden flex items-center justify-center">
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti" class="fixed top-0 left-0 w-full h-full"></canvas>
+
+  <!-- Music -->
   <audio id="bgMusic" loop>
     <source src="./music/teddy-bear.mpeg" type="audio/mpeg">
   </audio>
-<div id="intro" class="text-center text-white px-6">
 
-  <div class="text-6xl heart-beat mb-6">❤️</div>
+  <!-- Intro Screen -->
+  <div id="intro" 
+       class="w-full h-screen flex flex-col items-center justify-center 
+              text-center text-white px-6">
 
-  <h1 id="typingText" class="text-xl font-semibold"></h1>
+    <!-- Heart -->
+    <div class="text-6xl sm:text-7xl md:text-8xl heart-beat mb-6 flex justify-center w-full">
+      ❤️
+    </div>
 
-</div>
+    <!-- Typing Text -->
+    <h1 id="typingText" 
+        class="text-lg sm:text-xl md:text-2xl font-semibold max-w-md mx-auto">
+    </h1>
+
+  </div>
 
 <script>
   const music = document.getElementById("bgMusic");
